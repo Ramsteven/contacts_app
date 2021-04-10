@@ -1,4 +1,42 @@
-require 'bcrypt'
+class EncryptionService
+ KEY = ActiveSupport::KeyGenerator.new(
+   Rails.application.credentials[Rails.env.to_sym][:encrypt][:key_encrypt]
+  ).generate_key(
+    SecureRandom.random_bytes(
+    ActiveSupport::MessageEncryptor.key_len
+  ),
+    ActiveSupport::MessageEncryptor.key_len
+  ).freeze 
+
+  # KEY = ActiveSupport::KeyGenerator.new(
+  #   ENV.fetch("SECRET_KEY_BASE")
+  # ).generate_key(
+  #   ENV.fetch("ENCRYPTION_SERVICE_SALT"),
+  #   ActiveSupport::MessageEncryptor.key_len
+  # ).freeze
+
+
+  private_constant :KEY
+
+  delegate :encrypt_and_sign, :decrypt_and_verify, to: :encryptor
+
+  def self.encrypt(value)
+    new.encrypt_and_sign(value)
+  end
+
+  def self.decrypt(value)
+    new.decrypt_and_verify(value)
+  end
+
+  private
+
+  def encryptor
+    ActiveSupport::MessageEncryptor.new(KEY)
+  end
+end
+
+
+
 
 class CreditCardValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
@@ -72,7 +110,8 @@ end
 
 class Contact < ApplicationRecord
   belongs_to :user
-  before_save -> { self[:credit_card] = BCrypt::Password.create( self[:credit_card] , :cost => 10) }
+ # before_save -> { self[:credit_card] = BCrypt::Password.create( self[:credit_card] , :cost => 10) }
+  before_save  -> { self[:credit_card] = api_token_cryp(self[:credit_card])}
 
   VALID_BIRTH_DATE_REGEX = /\A(?:(?=[02468][048]00|[13579][26]00|[0-9][0-9]0[48]|[0-9][0-9][2468][048]|[0-9][0-9][13579][26])\d{4}(?:(-|)(?:(?:00[1-9]|0[1-9][0-9]|[1-2][0-9][0-9]|3[0-5][0-9]|36[0-6])|(?:01|03|05|07|08|10|12)(?:\1(?:0[1-9]|[12][0-9]|3[01]))?|(?:04|06|09|11)(?:\1(?:0[1-9]|[12][0-9]|30))?|02(?:\1(?:0[1-9]|[12][0-9]))?|W(?:0[1-9]|[1-4][0-9]|5[0-3])(?:\1[1-7])?))?)$|^(?:(?![02468][048]00|[13579][26]00|[0-9][0-9]0[48]|[0-9][0-9][2468][048]|[0-9][0-9][13579][26])\d{4}(?:(-|)(?:(?:00[1-9]|0[1-9][0-9]|[1-2][0-9][0-9]|3[0-5][0-9]|36[0-5])|(?:01|03|05|07|08|10|12)(?:\2(?:0[1-9]|[12][0-9]|3[01]))?|(?:04|06|09|11)(?:\2(?:0[1-9]|[12][0-9]|30))?|(?:02)(?:\2(?:0[1-9]|1[0-9]|2[0-8]))?|W(?:0[1-9]|[1-4][0-9]|5[0-3])(?:\2[1-7])?))?)\z/
   VALID_FULLNAME_REGEX = /\A[a-zA-Z-]+\z/
@@ -87,6 +126,14 @@ class Contact < ApplicationRecord
   validates :franchise, presence: true
   validates :email, presence: true, email: true
 
-  private
+  def api_token
+    EncryptionService.decrypt(encrypted_api_token)
+    #EncryptionService.decrypt("diVs6uL/XCC7QsqT2Xm7OeEFzQ+TYuxZ0wg=--VZ25034HLJUqtUKu--pu3r03XuWImFDNO579+OlQ==").last(4)
+  end
 
+  def api_token_cryp(value)
+    encrypted_api_token = EncryptionService.encrypt(value)
+  end
+
+  byebug
 end
