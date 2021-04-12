@@ -6,11 +6,16 @@
     <div class="d-flex justify-content-around align-items-center">
       <div class="text-justify">
         <h4>Import File</h4>
-      <hr>
-      <%= form_tag  contacts_import_path, multipart: true do %>
-        <%= file_field_tag :file, class: "btn btn-sm btn-warning" %>
-        <%= submit_tag "Import", class: "btn btn-sm btn-success" %>
+        <hr>
+      <%= form_with( model: Attached, url: attacheds_path) do |f| %>
+        <%= f.file_field :attached_csv, class: "btn btn-sm btn-warning" %>
+        <%= f.submit "Import", class: "btn btn-sm btn-success" %>
       <% end %>
+
+      <%# <%= form_tag  contacts_import_path, multipart: true do %1> %>
+      <%#   <%= file_field_tag :file, class: "btn btn-sm btn-warning" %1> %>
+      <%#   <%= submit_tag "Import", class: "btn btn-sm btn-success" %1> %>
+      <%# <% end %1> %>
       </div>
     </div>
     <hr>

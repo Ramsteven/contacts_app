@@ -20,7 +20,6 @@ class ContactsController < ApplicationController
 
   def create
     @contact = current_user.contacts(set_params)
-    @contact.id = current_user.contacts.last.id + 1
     if @contact.save
       flash[:notice] = "Usuario #{ @contact.email} creado "
       redirect_to root_path
