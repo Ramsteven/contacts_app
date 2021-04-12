@@ -107,18 +107,22 @@ end
 class BirthDateValidator < ActiveModel::Validator
   def validate(record)
     date_iso8601 = ["%F", "%Y%m%d"]
-    date = record.send(:birth_date_before_type_cast)
+    date_birth = record.send(:birth_date_before_type_cast)
     value = ""
       begin
-        value = Time.strptime(date, date_iso8601[0])
+        value = Time.strptime(date_birth, date_iso8601[0])
       rescue ArgumentError
          begin
-          value = Time.strptime(date, date_iso8601[1])
+          value = Time.strptime(date_birth, date_iso8601[1])
          rescue ArgumentError
             record.errors.add(:birth_date, "This format is not valid olny acepts %Y%m%d and %F")
           end
       end
-      record[:birth_date] = value
+      record[:birth_date] = date_birth
+      
+      if record[:birth_date].nil?
+            record.errors.add(:birth_date, "This format is not valid olny acepts %Y%m%d and %F")
+      end
   end
 end
 
