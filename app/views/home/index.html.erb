@@ -1,2 +1,18 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<div>
+<div>
+  <div class="container text-center">
+    <h1>Contacts of <%= @user %></h1>
+
+    <div class="d-flex justify-content-around align-items-center">
+      <div class="text-justify">
+        <h4>Import File</h4>
+      <hr>
+      <%= form_tag  contacts_import_path, multipart: true do %>
+        <%= file_field_tag :file, class: "btn btn-sm btn-warning" %>
+        <%= submit_tag "Import", class: "btn btn-sm btn-success" %>
+      <% end %>
+      </div>
+    </div>
+    <hr>
+    </div>
+</div>
