@@ -1,6 +1,6 @@
 class AttachedsController < ApplicationController
   def index
-    @attached = Attached.all
+    @attacheds = current_user.attacheds.all
   end
 
 
@@ -17,7 +17,12 @@ class AttachedsController < ApplicationController
   end
 
   def create
+    #Attached.name_headers(v, params[:headers])
+    #
+    byebug
     @attached = Attached.new(set_params)
+    @attached.match = params[:headers]
+    @attached.name = set_params[:attached_csv].original_filename 
     @attached.user = current_user
     @attached.status = "Waiting"
     if @attached.save
@@ -32,5 +37,5 @@ class AttachedsController < ApplicationController
   def set_params
     params.require(:attached).permit(:attached_csv)
   end
- 
-end
+
+ end

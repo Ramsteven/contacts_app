@@ -1,3 +1,4 @@
+
 <div>
 <div>
   <div class="container text-center">
@@ -9,6 +10,7 @@
         <hr>
       <%= form_with( model: Attached, url: attacheds_path) do |f| %>
         <%= f.file_field :attached_csv, class: "btn btn-sm btn-warning" %>
+        <div id="text"></div>
         <%= f.submit "Import", class: "btn btn-sm btn-success" %>
       <% end %>
 
@@ -19,5 +21,7 @@
       </div>
     </div>
     <hr>
-    </div>
+  </div>
+
+
 </div>
