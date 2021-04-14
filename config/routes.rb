@@ -2,9 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root to: "home#index"
-  get 'contacts/import' => 'contacts#my_import'
-  get 'attacheds/upload' => 'attacheds#create'
-  
+ post '/attacheds/import/:id', to: 'attacheds#import', as: "attacheds_import" 
   resources :contacts do
     collection {post :import}
   end
@@ -12,5 +10,7 @@ Rails.application.routes.draw do
   resources :attacheds do
     collection {post :create}
   end
+
+  resources :fail_contacts, only: [:index, :show]
 
 end

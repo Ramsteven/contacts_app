@@ -12,14 +12,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
           <% @attacheds.each do | attch |%>
-            <th scope="row">3</th>
+          <tr>
+            <th scope="row"><%= attch.id %></th>
             <td><%= attch.name %></td>
             <td><%= attch.status %></td>
-            <td>borrar y eso</td>
-          <%end%>
+            <td><%=link_to "import", attacheds_import_path(attch), method: :post %></td>
           </tr>
+          <%end%>
         </tbody>
       </table>
     </div>

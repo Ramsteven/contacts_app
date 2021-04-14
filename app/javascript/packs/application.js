@@ -22,8 +22,8 @@ $(document).ready(function() {
 													              
 						console.log(e.target.result.split("\n")[0]);
 							//$('#text').html(e.target.result.split("\n")[0]);
-            var content = e.target.result.split("\n")[0].split(',');
-						var contentReal = ["fullname", "address", "email", "credit_card", "phone", "birth_date"]
+            var contentReal = e.target.result.split("\n")[0].split(',');
+						var content = ["fullname", "address", "email", "credit_card", "phone", "birth_date"]
 						console.log(contentReal)
      				var aux= ""
 						var final= "<h1>Assignament headers</h1><p>Please assing each header for save in the database</p>"

@@ -76,8 +76,9 @@ class EmailValidator < ActiveModel::EachValidator
       record.errors.add attribute, (options[:message] || "is not an email")
     end
 
-    if email_validate(User.first.contacts, value) #momentanily User.first => replace after with current_user
+    if email_validate( User.find(record[:user_id]).contacts, value) #momentanily User.first => replace after with current_user
       record.errors.add attribute, (options[:message] || "Currently exist's an contact with this email")
+      byebug
     end
   end
 
@@ -85,23 +86,11 @@ class EmailValidator < ActiveModel::EachValidator
   #function that check contacts array and model Employee 
   #for discard employees with repetead email
   def email_validate(contacts, current_email) 
-    i=0
-    while i <= contacts.length
-      begin
-        if contacts[i][:email] == current_email
-          return true
-        end
-      rescue => e
-      end
-      
-    #  if Contact.where(email: current_email).present?
-    #    return true
-    #  end
-      i+=1
-    end 
+     if contacts.where(email: current_email).present?
+       return true
+     end
     false
-  end
-
+  end 
 end
 
 class BirthDateValidator < ActiveModel::Validator
@@ -130,14 +119,13 @@ class Contact < ApplicationRecord
   belongs_to :user
  # before_save -> { self[:credit_card] = BCrypt::Password.create( self[:credit_card] , :cost => 10) }
   before_save  -> { self[:credit_card] = api_token_cryp(self[:credit_card])}
-  attr_accessor :current_user
 
+  attr_accessor :current_user
   VALID_FULLNAME_REGEX =/\A[a-zA-Z- ]+\z/
   VALID_PHONE_REGEX =/\A\(\+\d{2}\) \d{3}([ -])\d{3}\1\d{2}\1\d{2}\z/
   
 
   validates :fullname, presence: true, format: { with: VALID_FULLNAME_REGEX , message: "only allows letters" }
-  #validates :birth_date, presence: true,  birth_date: true
   validates_with BirthDateValidator, attributes: [:birth_date]
   validates :phone, presence: true, presence: true, format: { with: VALID_PHONE_REGEX}
   validates :address, presence: true
@@ -152,43 +140,5 @@ class Contact < ApplicationRecord
 
   def api_token_cryp(value)
     encrypted_api_token = EncryptionService.encrypt(value)
-  end
-
-
-  def self.my_import(file, current_user)
-      contacts = []
-      value = current_user.contacts.last.present? ? current_user.contacts.last.id : 0
-      CSV.foreach(file.path, headers: true) do |row| 
-        if email_validate(contacts, row[1], current_user)
-          next 
-        end
-        #row[0] = value+=1
-
-        byebug
-        current_user.contacts.create! row.to_h 
-        #contacts << current_user.contacts.new(row.to_h)
-      end
-      #current_user.contacts.create! contacts
-      #current_user.contacts.import(contacts, validate: true)
-      #Employee.import employees, recursive: true, on_duplicate_key_ignore: { columns: [:email] } 
-  end
-
-
-  def self.email_validate(employees, current_email, current_user) 
-    i=0
-    while i <= employees.length
-      begin
-        if vali=employees[i][:email] == current_email
-          return true
-        end
-      rescue => e
-      end
-      
-      if current_user.contacts.where(email: current_email).present?
-        return true
-      end
-      i+=1
-    end 
-    false
   end
 end

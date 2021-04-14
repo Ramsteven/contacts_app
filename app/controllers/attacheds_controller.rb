@@ -1,6 +1,8 @@
 class AttachedsController < ApplicationController
+  before_action :get_attach, only: [:import]
+
   def index
-    @attacheds = current_user.attacheds.all
+    @attacheds = current_user.attacheds
   end
 
 
@@ -12,6 +14,19 @@ class AttachedsController < ApplicationController
     # end
   end
 
+  def import
+    begin
+     Attached.my_import(@attch_file, current_user)
+    rescue => exception
+      message = exception.message
+      flash[:alert] = "Something wrong happened with the file #{message}"
+    end
+    redirect_to root_url
+  end
+
+
+
+
   def new
     @attached = current_user.attacheds.new
   end
@@ -19,12 +34,11 @@ class AttachedsController < ApplicationController
   def create
     #Attached.name_headers(v, params[:headers])
     #
-    byebug
-    @attached = Attached.new(set_params)
-    @attached.match = params[:headers]
-    @attached.name = set_params[:attached_csv].original_filename 
-    @attached.user = current_user
-    @attached.status = "Waiting"
+    @attached = current_user.attacheds.build( attached_csv: set_params[:attached_csv],
+    match: params[:headers],
+    name: set_params[:attached_csv].original_filename, 
+    status: "Waiting"
+    )
     if @attached.save
       redirect_to root_path
     else
@@ -36,6 +50,10 @@ class AttachedsController < ApplicationController
   private
   def set_params
     params.require(:attached).permit(:attached_csv)
+  end
+
+  def get_attach
+    @attch_file = current_user.attacheds.find(params[:id])
   end
 
  end

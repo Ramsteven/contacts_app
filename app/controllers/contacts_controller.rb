@@ -1,6 +1,5 @@
 class ContactsController < ApplicationController
   def index
-    byebug
     @user = User.find(current_user.id)
     @contacts = @user.contacts
   end
