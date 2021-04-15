@@ -2,6 +2,8 @@
   <div>
     <div class="container text-center">
       <h1>List attached files</h1>
+
+            <td><%=link_to "Delete all", destroy_all_path(current_user), method: :delete, class: "btn-sm btn-info" %></td>
       <div class="flickr_pagination m-4">
         <%= will_paginate @attacheds, :container => false %>
       </div>

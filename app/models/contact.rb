@@ -78,7 +78,6 @@ class EmailValidator < ActiveModel::EachValidator
 
     if email_validate( User.find(record[:user_id]).contacts, value) #momentanily User.first => replace after with current_user
       record.errors.add attribute, (options[:message] || "Currently exist's an contact with this email")
-      byebug
     end
   end
 
