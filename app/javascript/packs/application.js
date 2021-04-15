@@ -33,7 +33,7 @@ $(document).ready(function() {
 						}
 						for (var y=0; y < contentReal.length; y++){
 							final+= "<label for='"+contentReal[y]+"'>"+contentReal[y]+": </label> \
-								<select type='text' name='headers["+contentReal[y]+"]' list='header'> "+aux+"</select>"
+								<select type='text' name='headers["+contentReal[y]+"]' list='header'> "+aux+"</select> <br>"
 						}
 							var form= "<form name='headers'>"+final+" </form>"
 											$("#text").html(form);

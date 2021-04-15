@@ -7,7 +7,7 @@ class ContentTypeValidator < ActiveModel::EachValidator
     end
 
     unless record.attached_csv.attached?
-      record.errors.add(attribute, "Plese attach an file CSV", options)
+      record.errors.add(attribute, "Please attach an file CSV", options)
     end
   end
 
@@ -17,6 +17,7 @@ class ContentTypeValidator < ActiveModel::EachValidator
     options.fetch(:in)
   end
 end
+
 
 class Attached < ApplicationRecord
   belongs_to :user
@@ -35,7 +36,7 @@ class Attached < ApplicationRecord
       value = 0
       convert = JSON.parse match.gsub("=>", ":")
       table = CSV.parse(attached_csv.download, headers: true, header_converters: lambda { |name| convert[name] })
-
+        
       table.each do |row| 
         @import_contacts = user.contacts.new row.to_h
         unless @import_contacts.save

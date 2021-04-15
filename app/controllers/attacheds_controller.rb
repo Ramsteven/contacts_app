@@ -21,7 +21,6 @@ class AttachedsController < ApplicationController
       columns = CSV.open(file.path, headers: true).read.headers.count
     rescue
     end
-      byebug
     @attached = user_attc.build( 
       attached_csv: set_params,
       match: params[:headers],

@@ -8,25 +8,18 @@ class EncryptionService
     ActiveSupport::MessageEncryptor.key_len
   ).freeze 
 
-  # KEY = ActiveSupport::KeyGenerator.new(
-  #   ENV.fetch("SECRET_KEY_BASE")
-  # ).generate_key(
-  #   ENV.fetch("ENCRYPTION_SERVICE_SALT"),
-  #   ActiveSupport::MessageEncryptor.key_len
-  # ).freeze
-
-
   private_constant :KEY
 
   delegate :encrypt_and_sign, :decrypt_and_verify, to: :encryptor
 
   def self.encrypt(value)
-    new.encrypt_and_sign(value)
+    result = new.encrypt_and_sign(value[0..-5])
+    result += value[-4..-1]
   end
 
-  def self.decrypt(value)
-    new.decrypt_and_verify(value)
-  end
+  # def self.decrypt(value)
+  #   new.decrypt_and_verify(value)
+  # end
 
   private
 
@@ -82,8 +75,8 @@ class EmailValidator < ActiveModel::EachValidator
   end
 
    private
-  #function that check contacts array and model Employee 
-  #for discard employees with repetead email
+  #function that check contacts
+  #for discard contacts with repetead email
   def email_validate(contacts, current_email) 
      if contacts.where(email: current_email).present?
        return true
@@ -116,10 +109,8 @@ end
 
 class Contact < ApplicationRecord
   belongs_to :user
- # before_save -> { self[:credit_card] = BCrypt::Password.create( self[:credit_card] , :cost => 10) }
   before_save  -> { self[:credit_card] = api_token_cryp(self[:credit_card])}
 
-  attr_accessor :current_user
   VALID_FULLNAME_REGEX =/\A[a-zA-Z- ]+\z/
   VALID_PHONE_REGEX =/\A\(\+\d{2}\) \d{3}([ -])\d{3}\1\d{2}\1\d{2}\z/
   
@@ -132,12 +123,15 @@ class Contact < ApplicationRecord
   validates :franchise, presence: true
   validates :email, presence: true, email: true
 
-  def api_token
-    EncryptionService.decrypt(encrypted_api_token)
-    #EncryptionService.decrypt("diVs6uL/XCC7QsqT2Xm7OeEFzQ+TYuxZ0wg=--VZ25034HLJUqtUKu--pu3r03XuWImFDNO579+OlQ==").last(4)
-  end
+  # def api_token
+  #   EncryptionService.decrypt(encrypted_api_token) -> decrypt method
+  # end
 
   def api_token_cryp(value)
     encrypted_api_token = EncryptionService.encrypt(value)
   end
 end
+
+
+
+

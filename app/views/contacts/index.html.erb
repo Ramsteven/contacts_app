@@ -28,7 +28,7 @@
             <td><%= contact.phone %></td>
 						<td><%= contact.birth_date.strftime("%Y %B %d") %></td>
 						<td><%= contact.franchise %></td>
-						<td><%= contact.credit_card %></td>
+						<td>xxxxxxxxxxx<%= contact.credit_card[-4..-1] %></td>
             <%# <%=link_to "delete", fail_contact_path(contact.id)%></td>
           </tr>
           <%end%>
