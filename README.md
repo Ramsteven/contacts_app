@@ -13,6 +13,16 @@ Things you may want to cover:
 * run yarn add bootstrap jquery popper.js
 * run bundle install in your terminal  nt
 * inside the folder of project run:  rails db:migrate
+* you should run and add this credentials with  EDITOR=nvim rails credentials:edit
+
+development:
+  encrypt:
+    key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c
+test:
+  encrypt:
+    key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c
+    
+* the key_encrypt above can be changed for hash more secure of any value if you prefer
 * optional run rails db:seed for create users automaticly with this credentials:
 	email = 'test@example.com'
 	password = 'password'
