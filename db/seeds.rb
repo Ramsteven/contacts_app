@@ -8,5 +8,5 @@
 #
 user = User.new
 user.email = 'test@example.com'
-user.encrypted_password = 'password'
+user.password = 'password'
 user.save!
