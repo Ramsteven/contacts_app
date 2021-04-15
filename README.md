@@ -1,4 +1,4 @@
-# Twitter clone
+# Contact import CSV
 
 this app was create with version of rails 6.1.3
 
@@ -15,12 +15,14 @@ Things you may want to cover:
 * inside the folder of project run:  rails db:migrate
 * you should run and add this credentials with  EDITOR=nvim rails credentials:edit
 
-development:
-  encrypt:
-    key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c
-test:
-  encrypt:
-    key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c
+development: <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; encrypt:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c <br/>
+
+  
+test: <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; encrypt:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; key_encrypt: 99b8f9fdf808e8d919e1873d06b4035c <br/>
     
 * the key_encrypt above can be changed for hash more secure of any value if you prefer
 * optional run rails db:seed for create users automaticly with this credentials:
