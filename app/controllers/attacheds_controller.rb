@@ -2,16 +2,7 @@ class AttachedsController < ApplicationController
   before_action :get_attach, only: [:import]
 
   def index
-    @attacheds = current_user.attacheds
-  end
-
-
-  def export_csv
-     # @contacts = Employee.all
-     # respond_to do |format|
-     #  format.html
-     #  format.csv { send_data @employees.to_csv, filename: "employees-#{Date.today}.csv",  type: 'text/csv; charset=utf-8' }
-    # end
+    @attacheds = current_user.attacheds.paginate(page: params[:page], per_page: 12)
   end
 
   def import
@@ -24,25 +15,36 @@ class AttachedsController < ApplicationController
     redirect_to root_url
   end
 
-
-
-
   def new
     @attached = current_user.attacheds.new
   end
 
   def create
-    #Attached.name_headers(v, params[:headers])
-    #
+    if params[:attached].nil?
+      flash[:alert] = "You shoulbe attached an file, please click on choose file"
+      redirect_to root_path
+      return
+    end
+
+    file = set_params[:attached_csv]
+    @headers = 0
+    begin 
+      @head = CSV.open(file.path, headers: true).read.headers.count
+    rescue
+    end
+
     @attached = current_user.attacheds.build( attached_csv: set_params[:attached_csv],
     match: params[:headers],
     name: set_params[:attached_csv].original_filename, 
-    status: "Waiting"
-    )
+    headers_csv: @head,
+    status: "Waiting" )
     if @attached.save
       redirect_to root_path
+      flash[:alert] = "file attached successfully"
     else
-      render 'new'
+      message = @attached.errors.full_messages
+      flash[:alert] = "Something wrong happened with the file #{message}"
+      redirect_to root_path
     end
   end
 

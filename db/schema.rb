@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_203227) do
+ActiveRecord::Schema.define(version: 2021_04_15_022539) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2021_04_14_203227) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "match"
     t.string "name"
+    t.integer "headers_csv"
     t.index ["user_id"], name: "index_attacheds_on_user_id"
   end
 

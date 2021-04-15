@@ -1,7 +1,10 @@
 <div>
   <div>
     <div class="container text-center">
-    <h1>List Contacts</h1>
+      <h1>List Contacts</h1>
+      <div class="flickr_pagination m-4">
+        <%= will_paginate @contacts, :container => false %>
+      </div>
       <table class="table table-dark">
         <thead>
           <tr>
@@ -31,6 +34,10 @@
           <%end%>
         </tbody>
       </table>
+       <div class="flickr_pagination m-4">
+        <%= will_paginate @contacts, :container => false %>
+      </div>
+
     </div>
   </div>
 </div>

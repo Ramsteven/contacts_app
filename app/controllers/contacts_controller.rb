@@ -1,7 +1,8 @@
 class ContactsController < ApplicationController
   def index
     @user = User.find(current_user.id)
-    @contacts = @user.contacts
+    @contacts = 
+    @contacts = @user.contacts.paginate(page: params[:page], per_page: 12)
   end
 
 
